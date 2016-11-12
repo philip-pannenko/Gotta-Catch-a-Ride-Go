@@ -1,0 +1,9 @@
+applications:
+- path: target/TomcatHelloWorldApp.war
+  memory: 256M
+  instances: 1
+  domain: mybluemix.net
+  name: Gotta Catch-a-Ride Go
+  host: Gotta-Catch-a-Ride-Go
+  disk_quota: 1024M
+  buildpack: java_buildpack
