@@ -40,10 +40,14 @@ function geoError() {
 }
 
 function showMap() {
-	var img = new Image();
-    img.src = "https://maps.googleapis.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&zoom=13&size=300x300&sensor=false";
-
-    output.appendChild(img);
+	zoom = 15;
+	x = lat2tile(latitude.innerHTML, zoom);
+	y = long2tile(longitude.innerHTML, zoom);
+	map.innerHTML = '<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/search?q='+latitude.innerHTML+','+longitude.innerHTML+'&key=AIzaSyDwMujYa5vx07JKm81BfzYKugsJd9SzUSM" allowfullscreen></iframe>';
+	// map.innerHTML = '<img src="https://api.pitneybowes.com/location-intelligence/geomap/v1/tile/osm/'+zoom+'/'+x+'/'+y+'.png?api_key=xAAjYPYcG75SiICwPTfRtG4BdI65xyJ8">';
 }
+
+function long2tile(lon,zoom) { return (Math.floor((lon+180)/360*Math.pow(2,zoom))); }
+function lat2tile(lat,zoom)  { return (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom))); }
 
 getLocation();
