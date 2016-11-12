@@ -27,12 +27,21 @@
       	width: 468px;
       	z-index: 200;
       }
+      .attribution {
+      	position: absolute;
+      	bottom: 25px;
+      	left: 5px;
+      	height: 10px;
+      	width: 90%;
+      	z-index: 200;
+      	font-size: 8px;
+      }
   </style>
 </head>
 <body id="container">
 	<div class="logo-overlay"></div>
 	<div id="map"></div>
-	<div>Icons made by <a href="http://www.flaticon.com/authors/scott-de-jonge" title="Scott de Jonge">Scott de Jonge</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+	<div class="attribution">Icons made by <a href="http://www.flaticon.com/authors/scott-de-jonge" title="Scott de Jonge">Scott de Jonge</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 	<script>
 		var container = document.getElementById("container");
 		var myLat=41.340485, myLng=-72.0991807, myAcc;
