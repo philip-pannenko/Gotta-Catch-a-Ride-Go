@@ -46,9 +46,51 @@
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 	<script>
+		$( window ).ready(function() {
+		$.get("rest/token", function( data ) {
+			token = data;
+			console.log('token defined: ' + token);
+
+			var payload = {};
+			payload.latitude = 1;
+			payload.longitude = 1;
+			payload.accuracy = 1;
+			payload.id = token;
+			payload.message = 'from browser';
+
+			$.ajax({
+				url: 'rest/location',
+				type: 'post',
+				dataType: 'json',
+				contentType: 'application/json',
+				data: JSON.stringify(payload),
+				success: function( data, textStatus, jQxhr ){
+			        console.log(data);
+
+					$.get("rest/locations", function( data ) {
+							console.log('locations after this browser submitted itself to server');
+							console.log(JSON.stringify(data,null,' '));
+					});
+			    },
+			    error: function( jqXhr, textStatus, errorThrown ){
+			        console.log( errorThrown );
+			    }
+			});
+		});
+
+		$.get("rest/locations", function( data ) {
+			data = JSON.stringify(data,null,' ');
+			console.log('locations prior to this browser submits data to server');
+			console.log(data);
+			updateLocations(data);
+		});
+
+
+		//////////////////////////////////
+		/// GEO LOCATION THINGS
 		var container = document.getElementById("container");
 		var myLat=41.340485, myLng=-72.0991807, myAcc; // default to EB NL
-		var myMarker, locations;
+		var map, myMarker, locations, markers;
 
 		/**
 		 * Google image icon for walking person
@@ -100,6 +142,27 @@
 			return loc;
 		}
 
+		function updateLocations(data) {
+			console.log("updating locations");
+			// longitude, latitude, id
+			for (var i in data) {
+				var markerFound = false;
+				for (var j in markers) {
+					if (markers[j].id == data[i].id) {
+						markers[j].setPosition(data[i].latitude, data[i].longitude);
+						markerFound = true;
+					}
+				}
+				if (!markerFound) {
+					// add new marker
+					new google.maps.Marker({
+						position: new google.maps.LatLng(data[i].latitude, data[i].longitude),
+						map: map,
+					});
+				}
+			}
+		}
+
 
 		/**
 		 * Initialize Google Map variables and populate object
@@ -107,7 +170,7 @@
 		 */
 		function initMap() {
 
-			var map = new google.maps.Map(document.getElementById('map'), {
+			map = new google.maps.Map(document.getElementById('map'), {
 				zoom: 15,
 				center: {lat: 41.340485, lng: -72.0991807}
 			});
@@ -123,6 +186,7 @@
 
 					map.setCenter(pos);
 					updateMyLocation(pos.lat, pos.lng);
+					updateLocations();
 				}, function() {
 					handleLocationError(true, infoWindow, map.getCenter());
 				});
@@ -148,11 +212,12 @@
 	        });
 
 	        // Add some markers to the map.
-	        var markers = locations.map(function(location, i) {
+	        markers = locations.map(function(location, i) {
 	        	return new google.maps.Marker({
 	        		position: {lat: location.lat, lng: location.lng},
 	        		label: location.label,
 	        		icon: busImage,
+	        		id: i,
 	        	});
 	        });
 	        markers.push(myMarker);
@@ -163,6 +228,7 @@
 	    }
 
 	    initMap();
+	});
 	</script>
 </body>
 </html>
