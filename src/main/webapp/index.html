@@ -82,28 +82,6 @@
 			timeout: 27000,
 		};
 
-		function getLocation() {
-			if (navigator.geolocation) {
-				navigator.geolocation.watchPosition(showPosition, geoError, geoOptions);
-			}
-			else {
-				geoError();
-			}
-		}
-
-		function showPosition(position) {
-			if (position && position.coords) {
-				updateMyLocation(position.coords.latitude, position.coords.longitude, position.coords.accuracy);
-			}
-			else {
-				geoError();
-			}
-		}
-
-		function geoError() {
-			container.innerHTML = "Geolocation is not supported by this browser.";
-		}
-
 		function updateMyLocation(lat, long, accuracy) {
 			myLat = lat;
 			myLng = long;
@@ -144,6 +122,7 @@
 					};
 
 					map.setCenter(pos);
+					updateMyLocation(pos.lat, pos.lng);
 				}, function() {
 					handleLocationError(true, infoWindow, map.getCenter());
 				});
