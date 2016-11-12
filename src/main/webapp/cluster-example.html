@@ -33,6 +33,26 @@
         // Create an array of alphabetical characters used to label the markers.
         var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+        var myImage = {
+          url:'https://gotta-catch-a-ride-go.mybluemix.net/images/pedestrian-walking.png',
+          size: new google.maps.Size(20,32),
+          origin: new google.maps.Point(0,0),
+          anchor: new google.maps.Point(0,32)
+        };
+
+        var otherImage = {
+          url:'https://gotta-catch-a-ride-go.mybluemix.net/images/pedestrian-walking.png',
+          size: new google.maps.Size(20,32),
+          origin: new google.maps.Point(0,0),
+          anchor: new google.maps.Point(0,32)
+        };
+
+        var locations = [
+        {lat: 41.3532176, lng: -72.09621419999999, label: 'User1', icon: myImage},
+        {lat: 41.345166, lng: -72.099453, label: 'User2', icon: otherImage},
+        {lat: 41.335166, lng: -72.099453, label: 'User3', icon: otherImage}
+        ];
+
         // Add some markers to the map.
         // Note: The code uses the JavaScript Array.prototype.map() method to
         // create an array of markers based on a given "locations" array.
@@ -50,25 +70,7 @@
           {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
       }
 
-      var myImage = {
-        url:'https://gotta-catch-a-ride-go.mybluemix.net/images/pedestrian-walking.png',
-        size: new google.maps.Size(20,32),
-        origin: new google.maps.Point(0,0),
-        anchor: new google.maps.Point(0,32)
-      };
 
-      var otherImage = {
-        url:'https://gotta-catch-a-ride-go.mybluemix.net/images/pedestrian-walking.png',
-        size: new google.maps.Size(20,32),
-        origin: new google.maps.Point(0,0),
-        anchor: new google.maps.Point(0,32)
-      };
-
-      var locations = [
-      {lat: 41.3532176, lng: -72.09621419999999, label: 'User1', icon: myImage},
-      {lat: 41.345166, lng: -72.099453, label: 'User2', icon: otherImage},
-      {lat: 41.335166, lng: -72.099453, label: 'User3', icon: otherImage}
-      ];
     </script>
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
     </script>
