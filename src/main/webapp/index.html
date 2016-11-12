@@ -41,9 +41,14 @@
 	<div class="logo-overlay"></div>
 	<div id="map"></div>
 	<div class="attribution">Icons made by <a href="http://www.flaticon.com/authors/scott-de-jonge" title="Scott de Jonge">Scott de Jonge</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2yMJAeJ7ZX_xYdgchCyXHEvcdHEuTJcc&libraries=geometry,places"></script>
+	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 	<script>
 		var container = document.getElementById("container");
 		var myLat=41.340485, myLng=-72.0991807, myAcc;
+		var myMarker, locations;
 
 		function geoError() {
 			container.innerHTML = "Geolocation is not supported by this browser.";
@@ -74,13 +79,13 @@
 		}
 
 		function getLocations() {
-			locations = [
+			var loc = [
 			{lat: 41.3532176, lng: -72.09621419999999, label: 'User1'},
 			{lat: 41.345166, lng: -72.099453, label: 'User2'},
 			{lat: 41.335166, lng: -72.099453, label: 'User3'}
 			];
 
-			return locations;
+			return loc;
 		}
 
 		function initMap() {
@@ -89,6 +94,7 @@
 				zoom: 15,
 				center: {lat: 41.340485, lng: -72.0991807}
 			});
+			var infoWindow = new google.maps.InfoWindow({map: map});
 
 			var myImage = {
 				url:'https://gotta-catch-a-ride-go.mybluemix.net/images/pedestrian-walking.png',
@@ -104,9 +110,40 @@
 				anchor: new google.maps.Point(0,32)
 			};
 
-	        var locations = getLocations();
+			var geoOptions = {
+				enableHighAccuracy: true,
+				maximumAge: 30000,
+				timeout: 27000,
+			};
 
-	        var myMarker = new google.maps.Marker({
+			// Try HTML5 geolocation.
+			if (navigator.geolocation) {
+				navigator.geolocation.watchPosition(function(position) {
+					var pos = {
+						lat: position.coords.latitude,
+						lng: position.coords.longitude
+					};
+
+					map.setCenter(pos);
+				}, function() {
+					handleLocationError(true, infoWindow, map.getCenter());
+				});
+			}
+			else {
+				// Browser doesn't support Geolocation
+				handleLocationError(false, infoWindow, map.getCenter());
+			}
+
+			function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+				infoWindow.setPosition(pos);
+				infoWindow.setContent(browserHasGeolocation ?
+					'Error: The Geolocation service failed.' :
+					'Error: Your browser doesn\'t support geolocation.');
+			}
+
+	        locations = getLocations();
+
+	        myMarker = new google.maps.Marker({
 	        	position: {lat: myLat, lng: myLng},
 	        	label: 'Me!',
 	        	icon: myImage,
@@ -130,12 +167,11 @@
 	        	{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 	    }
 	</script>
-	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-	</script>
+
 	<script async defer
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2yMJAeJ7ZX_xYdgchCyXHEvcdHEuTJcc&callback=initMap">
 	</script>
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="   crossorigin="anonymous"></script>
+
 
 </body>
 </html>
