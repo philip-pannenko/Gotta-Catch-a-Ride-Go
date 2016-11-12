@@ -1,23 +1,27 @@
 package net.mybluemix.bo;
 
+import java.util.Date;
+
 public class Location {
 	private float latitude;
 	private float longitude;
 	private int accuracy;
-	private long id;
+	private long id = -1;
 	private String message;
+	private Date age;
 
 	public Location() {
 		super();
 	}
 
-	public Location(float latitude, float longitude, int accuracy, long id, String message) {
+	public Location(float latitude, float longitude, int accuracy, long id, String message, Date age) {
 		super();
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.accuracy = accuracy;
 		this.id = id;
 		this.message = message;
+		this.age = age;
 	}
 
 	public float getLatitude() {
@@ -60,10 +64,18 @@ public class Location {
 		this.message = message;
 	}
 
+	public Date getAge() {
+		return age;
+	}
+
+	public void setAge(Date age) {
+		this.age = age;
+	}
+
 	@Override
 	public String toString() {
 		return "Location [latitude=" + latitude + ", longitude=" + longitude + ", accuracy=" + accuracy + ", id=" + id
-				+ ", message=" + message + "]";
+				+ ", message=" + message + ", age=" + age + "]";
 	}
 
 }
