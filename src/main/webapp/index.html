@@ -8,22 +8,29 @@
 
 </head>
 <body>
-	<div class="col-md-10 col-md-offset-1" id="data-view">
-		<div class="form-group">
-			<label for="latitude" class="col-sm-4 control-label">Latitude</label>
-			<p class="form-control-static col-sm-8" id="latitude"></p>
+	<div class="container form-horizontal">
+		<div class="row">
+			<div class="col-md-12" id="data-view">
+				<div class="form-group">
+					<label for="latitude" class="col-sm-4 control-label">Latitude</label>
+					<p class="form-control-static col-sm-8" id="latitude"></p>
+				</div>
+				<div class="form-group">
+					<label for="longitude" class="col-sm-4 control-label">Longitude</label>
+					<p class="form-control-static col-sm-8" id="longitude"></p>
+				</div>
+				<div class="form-group">
+					<label for="accuracy" class="col-sm-4 control-label">Accuracy</label>
+					<p class="form-control-static col-sm-8" id="accuracy"></p>
+				</div>
+			</div>
 		</div>
-		<div class="form-group">
-			<label for="longitude" class="col-sm-4 control-label">Longitude</label>
-			<p class="form-control-static col-sm-8" id="longitude"></p>
-		</div>
-		<div class="form-group">
-			<label for="accuracy" class="col-sm-4 control-label">Accuracy</label>
-			<p class="form-control-static col-sm-8" id="accuracy"></p>
-		</div>
+		<div class="row" id="map"></div>
 	</div>
+
 	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"   integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="   crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="app/gps.js"></script>
+
 </body>
 </html>
