@@ -33,17 +33,34 @@ function showPosition(position) {
 }
 
 function geoError() {
-	var noLocationText = "Not Available";
+	var noLocationText = 'Not Available';
 	latitude.innerHTML = noLocationText;
 	longitude.innerHTML = noLocationText;
 	accuracy.innerHTML = noLocationText;
 }
 
 function showMap() {
-	zoom = 15;
+	zoom = 18;
 	x = lat2tile(latitude.innerHTML, zoom);
 	y = long2tile(longitude.innerHTML, zoom);
-	map.innerHTML = '<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/search?q='+latitude.innerHTML+','+longitude.innerHTML+'&key=AIzaSyDwMujYa5vx07JKm81BfzYKugsJd9SzUSM" allowfullscreen></iframe>';
+	mode = 'walking';
+	avoid = 'highways';
+	maptype='satellite';
+	destination = 'General Dynamics Corp. Electric Boat Div. New London Engineering Office';
+	// Google just a map
+	map.innerHTML = '<iframe class="map-container" width="100%" height="500" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/search?q='+latitude.innerHTML+','+longitude.innerHTML+'&key=AIzaSyDwMujYa5vx07JKm81BfzYKugsJd9SzUSM" allowfullscreen></iframe>';
+
+	// Google directions example
+	// map.innerHTML = '<iframe class="map-container" width="100%" height="500" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyDwMujYa5vx07JKm81BfzYKugsJd9SzUSM'+
+		// '&origin='+latitude.innerHTML+','+longitude.innerHTML+
+		// '&destination='+destination+
+		// '&avoid='+avoid+
+		// '&mode='+mode+
+		// '&maptype='+maptype+
+		// '" allowfullscreen></iframe>';
+
+
+	// pitney bowes attempt
 	// map.innerHTML = '<img src="https://api.pitneybowes.com/location-intelligence/geomap/v1/tile/osm/'+zoom+'/'+x+'/'+y+'.png?api_key=xAAjYPYcG75SiICwPTfRtG4BdI65xyJ8">';
 }
 
