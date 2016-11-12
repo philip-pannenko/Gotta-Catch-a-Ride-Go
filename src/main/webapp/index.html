@@ -46,9 +46,30 @@
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 	<script>
+
 		var container = document.getElementById("container");
 		var myLat=41.340485, myLng=-72.0991807, myAcc;
 		var myMarker, locations;
+
+		var myImage = {
+			url:'https://gotta-catch-a-ride-go.mybluemix.net/images/pedestrian-walking.png',
+			size: new google.maps.Size(20,32),
+			origin: new google.maps.Point(0,0),
+			anchor: new google.maps.Point(0,32)
+		};
+
+		var otherImage = {
+			url:'https://gotta-catch-a-ride-go.mybluemix.net/images/frontal-bus-silhouette.png',
+			size: new google.maps.Size(32,32),
+			origin: new google.maps.Point(0,0),
+			anchor: new google.maps.Point(0,32)
+		};
+
+		var geoOptions = {
+			enableHighAccuracy: true,
+			maximumAge: 30000,
+			timeout: 27000,
+		};
 
 		function geoError() {
 			container.innerHTML = "Geolocation is not supported by this browser.";
@@ -78,7 +99,7 @@
 			myAcc = accuracy;
 		}
 
-		function getLocations() {
+		function setLocations() {
 			var loc = [
 			{lat: 41.3532176, lng: -72.09621419999999, label: 'User1'},
 			{lat: 41.345166, lng: -72.099453, label: 'User2'},
@@ -96,25 +117,7 @@
 			});
 			var infoWindow = new google.maps.InfoWindow({map: map});
 
-			var myImage = {
-				url:'https://gotta-catch-a-ride-go.mybluemix.net/images/pedestrian-walking.png',
-				size: new google.maps.Size(20,32),
-				origin: new google.maps.Point(0,0),
-				anchor: new google.maps.Point(0,32)
-			};
 
-			var otherImage = {
-				url:'https://gotta-catch-a-ride-go.mybluemix.net/images/frontal-bus-silhouette.png',
-				size: new google.maps.Size(32,32),
-				origin: new google.maps.Point(0,0),
-				anchor: new google.maps.Point(0,32)
-			};
-
-			var geoOptions = {
-				enableHighAccuracy: true,
-				maximumAge: 30000,
-				timeout: 27000,
-			};
 
 			// Try HTML5 geolocation.
 			if (navigator.geolocation) {
@@ -141,7 +144,7 @@
 					'Error: Your browser doesn\'t support geolocation.');
 			}
 
-	        locations = getLocations();
+	        locations = setLocations();
 
 	        myMarker = new google.maps.Marker({
 	        	position: {lat: myLat, lng: myLng},
@@ -166,11 +169,13 @@
 	        var markerCluster = new MarkerClusterer(map, markers,
 	        	{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 	    }
+
+	    initMap();
 	</script>
 
-	<script async defer
+<!-- 	<script async defer
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2yMJAeJ7ZX_xYdgchCyXHEvcdHEuTJcc&callback=initMap">
-	</script>
+	</script> -->
 
 
 </body>
