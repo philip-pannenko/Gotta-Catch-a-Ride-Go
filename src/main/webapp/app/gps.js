@@ -25,7 +25,7 @@ function showPosition(position) {
 		latitude.innerHTML = position.coords.latitude;
 		longitude.innerHTML = position.coords.longitude;
 		accuracy.innerHTML = position.coords.accuracy;
-		showMap();
+		updateLocation();
 	}
 	else {
 		geoError();
