@@ -3,26 +3,43 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Catch a Ride Go!</title>
-
+	
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2yMJAeJ7ZX_xYdgchCyXHEvcdHEuTJcc&libraries=geometry,places"></script>
+	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+	
 	<script>
 	
 	var token = -1;
+	var pos = null;
+	
+	if (navigator.geolocation) {
+		navigator.geolocation.watchPosition(function(position) {
+			pos = {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude
+			};
 
-	
-	</script>
-	
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-	
-	<script>
+			console.log(pos);
+			
+		}, function(err) {
+			console.log(err);
+		});
+	}
 	
 	$( window ).ready(function() {
 		$.get("rest/token", function( data ) {
 			token = data;
 			console.log('token defined: ' + token);
-			
+		});
+		
+		var sendData = function () {
+			if(!token) {
+				return;
+			}
 			var payload = {}; 
-			payload.latitude = 1;
-			payload.longitude = 1;
+			payload.latitude = pos.lat;
+			payload.longitude = pos.lng;
 			payload.accuracy = 1;
 			payload.id = token;
 			payload.message = 'from browser';
@@ -35,23 +52,51 @@
 				data: JSON.stringify(payload),
 				success: function( data, textStatus, jQxhr ){
 			        console.log(data);
-			        
-					$.get("rest/locations", function( data ) {
-							console.log('locations after this browser submitted itself to server');
-							console.log(JSON.stringify(data,null,' '));
-					});
-					
 			    },
 			    error: function( jqXhr, textStatus, errorThrown ){
 			        console.log( errorThrown );
 			    }
 			});
-		});
+		};
 		
 		$.get("rest/locations", function( data ) {
 			console.log('locations prior to this browser submits data to server');
 			console.log(JSON.stringify(data,null,' '));
 		});
+		
+		var getLocations = function() {
+			$.get("rest/locations", function( data ) {
+				console.log(JSON.stringify(data,null,' '));
+				
+				for(var i=0; i<data.length; i++) {
+					loc = data[i];
+				
+					// don't compare against self
+					if(loc.id !== token) {
+					      
+					    var from = new google.maps.LatLng(loc.latitude,loc.longitude);
+						var to   = new google.maps.LatLng(pos.lat, pos.lng);
+						var dist = google.maps.geometry.spherical.computeDistanceBetween(from, to); // returns in meters
+	
+						if (dist < 15) {
+							console.log('proximity less than 50 feet');
+						}
+
+					}
+				}
+			});
+		}
+		
+		window.setInterval(function() {
+			console.log('sendingData');
+			sendData();
+		}, 5000);
+		
+		window.setInterval(function() {
+			console.log('gettingLocations');
+			getLocations();
+		}, 6000);
+
 		
 	});
 	
