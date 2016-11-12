@@ -1,25 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>Tomcat Web Starter Application</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<link rel="stylesheet" href="style.css" />
+	<meta charset="UTF-8">
+	<title>Catch a Ride Go!</title>
+
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 </head>
 <body>
-	<table>
-		<tr>
-			<td style='width: 30%;'>
-				<img class = "newappIcon" src='images/newapp-icon.png'>
-			</td>
-			<td>
-				<!-- The "Hello World!" message comes from /SimpleServlet -->
-				<h1 id = "message"></h1>
-				
-				<p class='description'></p> Thanks for creating a <span class="blue">Tomcat Starter Application</span>.
-			</td>
-		</tr>
-	</table>
-	<!-- Call SimpleServlet to get the "Hello World" message  -->
-	<script type="text/javascript" src="index.js"></script>
+	<div class="col-md-10 col-md-offset-1" id="data-view">
+		<div class="form-group">
+			<label for="latitude" class="col-sm-4 control-label">Latitude</label>
+			<p class="form-control-static col-sm-8" id="latitude"></p>
+		</div>
+		<div class="form-group">
+			<label for="longitude" class="col-sm-4 control-label">Longitude</label>
+			<p class="form-control-static col-sm-8" id="longitude"></p>
+		</div>
+		<div class="form-group">
+			<label for="accuracy" class="col-sm-4 control-label">Accuracy</label>
+			<p class="form-control-static col-sm-8" id="accuracy"></p>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"   integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="   crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="app/gps.js"></script>
 </body>
 </html>
