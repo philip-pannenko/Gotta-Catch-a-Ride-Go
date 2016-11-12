@@ -6,7 +6,7 @@ var accuracy = document.getElementById("accuracy");
 
 function getLocation() {
 	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(showPosition);
+		navigator.geolocation.watchPosition(showPosition);
 	}
 	else {
 		container.innerHTML = "Geolocation is not supported by this browser.";
