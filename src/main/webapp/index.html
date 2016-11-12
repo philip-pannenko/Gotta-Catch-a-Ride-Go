@@ -48,7 +48,7 @@
 	<script>
 		$( window ).ready(function() {
 		var token;
-		$.get("https://gotta-catch-a-ride-go.mybluemix.net/rest/token", function( data ) {
+		$.get("rest/token", function( data ) {
 			token = data;
 			console.log('token defined: ' + token);
 		});
@@ -69,7 +69,7 @@
 		 * @type {Object}
 		 */
 		var walkImage = {
-			url:'https://gotta-catch-a-ride-go.mybluemix.net/images/pedestrian-walking.png',
+			url:'images/pedestrian-walking.png',
 			size: new google.maps.Size(20,32),
 			origin: new google.maps.Point(0,0),
 			anchor: new google.maps.Point(0,32)
@@ -80,7 +80,7 @@
 		 * @type {Object}
 		 */
 		var busImage = {
-			url:'https://gotta-catch-a-ride-go.mybluemix.net/images/frontal-bus-silhouette.png',
+			url:'images/frontal-bus-silhouette.png',
 			size: new google.maps.Size(32,32),
 			origin: new google.maps.Point(0,0),
 			anchor: new google.maps.Point(0,32)
@@ -110,7 +110,7 @@
 				payload.message = 'from browser';
 
 				$.ajax({
-					url: 'https://gotta-catch-a-ride-go.mybluemix.net/rest/location',
+					url: 'rest/location',
 					type: 'post',
 					dataType: 'json',
 					contentType: 'application/json',
@@ -127,7 +127,7 @@
 
 		function updateLocations() {
 			if (token) {
-				$.get("https://gotta-catch-a-ride-go.mybluemix.net/rest/locations", function( data ) {
+				$.get("rest/locations", function( data ) {
 					console.log('locations prior to this browser submits data to server');
 					console.log(JSON.stringify(data,null,' '));
 					updateMarkers(data);
