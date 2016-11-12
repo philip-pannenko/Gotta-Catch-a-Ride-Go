@@ -5,7 +5,7 @@ var longitude = document.getElementById("longitude");
 var accuracy = document.getElementById("accuracy");
 var map = document.getElementById("map");
 
-var geo_options = {
+var geoOptions = {
 	enableHighAccuracy: true,
 	maximumAge: 30000,
 	timeout: 27000,
@@ -13,7 +13,7 @@ var geo_options = {
 
 function getLocation() {
 	if (navigator.geolocation) {
-		navigator.geolocation.watchPosition(showPosition, geo_error, geo_options);
+		navigator.geolocation.watchPosition(showPosition, geoError, geoOptions);
 	}
 	else {
 		container.innerHTML = "Geolocation is not supported by this browser.";
