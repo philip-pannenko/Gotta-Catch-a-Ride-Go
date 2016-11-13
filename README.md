@@ -1,7 +1,11 @@
-TomcatHelloWorldApp Sample
+HitchhikerGO! - the carpool finder
 ==============
 
-This project contains a simple Servlet application.
+Looking for a ride? Put out your thumb digitally (we do not take responsibility for any adverse outcome nor do we recommend hitch hiking as a safe transportation option).
+
+Or maybe you're looking for a passenger to get carpool benefits?
+
+Built specifically to help EB New London drivers pick up passengers for carpool parking, HitchhikerGO! allows you to find those willing to ride.
 
 ## Building with Maven
 
@@ -16,6 +20,14 @@ This project can be built with [Apache Maven](http://maven.apache.org/). Use the
     ```bash
     $ cf push <appname> -p target/TomcatHelloWorldApp.war
     ```
+
+# Libraries Used
+
+* Google Maps API v3
+* Icons made by [Freepik](http://www.flaticon.com/authors/freepik) & [Madebyoliver](http://www.flaticon.com/authors/madebyoliver) from [www.flaticon.com](http://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
+* [jQuery 3.1.1](https://jquery.com/)
+* klokantech - Maptiler's [My Location Control for Google Maps](http://blog.klokantech.com/2016/04/my-location-control-for-google-maps-api.html)
+* Button from [Best CSS Button Generator](http://www.bestcssbuttongenerator.com/#/38)
 
 # Notice
 
