@@ -10,43 +10,83 @@
 	
 	<script>
 	
-	// Determine the correct object to use
-	var notification = window.Notification || window.mozNotification || window.webkitNotification;
 
-	// The user needs to allow this
-	if ('undefined' === typeof notification)
-	    alert('Web notification not supported');
-	else
-	    notification.requestPermission(function(permission){});
-
-	// A function handler
-	function Notify(titleText, bodyText)
+	function ftn_does_browser_support_notification(elementid)
 	{
-	    if ('undefined' === typeof notification)
-	        return false;       //Not supported....
-	    var noty = new notification(
-	        titleText, {
-	            body: bodyText,
-	            dir: 'auto', // or ltr, rtl
-	            lang: 'EN', //lang used within the notification.
-	            tag: 'notificationPopup', //An element ID to get/set the content
-	            icon: '' //The URL of an image to be used as an icon
-	        }
-	    );
-	    noty.onclick = function () {
-	        console.log('notification.Click');
-	    };
-	    noty.onerror = function () {
-	        console.log('notification.Error');
-	    };
-	    noty.onshow = function () {
-	        console.log('notification.Show');
-	    };
-	    noty.onclose = function () {
-	        console.log('notification.Close');
-	    };
-	    return true;
+		if (isSupported())
+		{
+			console.log("Your Browser is Supported");
+		}
+		else
+		{
+			console.log("Your Browser is NOT Supported");
+		}
 	}
+
+	function isSupported() 
+	{
+		if ((!window.Notification && !navigator.mozNotification) || !window.FileReader || !window.history.pushState) {
+			return false;	
+		}
+		return true;
+	}
+	
+	
+	function ftn_request_permission(elementid)
+	{
+		//check browser is supported...
+		if (!isSupported()) {return};
+		
+		var permission = Notification.requestPermission(function (permission) 
+		{
+			if (permission == "granted") 
+			{	
+				console.log("Permission Granted");
+			}
+			if (permission == "default")
+			{
+				console.log("DEFAULT");
+			}
+			if (permission == "denied")
+			{
+				console.log("Permission Denied. Note: you may have to visit your browser settings to reset this setting back to default to continue testing.");
+			}
+		});	
+	}
+	
+	
+	function ftn_display_notification()
+	{
+		
+		
+		window.setTimeout(function () 
+		{
+			var instance = new Notification(
+				'title!', {
+					body: "this is a browser message"
+					//,icon: icon
+				}
+			);
+			instance.onclick = function () {
+				// Something to do
+				console.log("Clicked");
+			};
+			instance.onerror = function () {
+				// Something to do
+				console.log("Error (Have you given permission?)");
+			};
+			instance.onshow = function () {
+				// Something to do
+				console.log("Shown");
+			};
+			instance.onclose = function () {
+				// Something to do
+				console.log("Closed");
+			};
+		}, 1000);
+	}
+	
+	
 	
 	</script>
 	
@@ -55,6 +95,16 @@
 <body id="container">
 	
 	<h1>1</h1>
+	
+	<button onclick="ftn_does_browser_support_notification('div_support');">Test For Support</button>
+	
+	<button onclick="ftn_request_permission('div_permission');">Ask For Permission</button>
+	
+	
+	<button onclick=
+		"ftn_display_notification();">Display Notification</button>
+	
+	
 	
 </body>
 </html>
