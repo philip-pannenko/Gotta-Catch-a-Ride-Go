@@ -29,9 +29,10 @@
 <body id="container">
 	<div class="logo-overlay" id="logo">HitchhikerGO!</div>
 	<div class="options" id="options">
+		<div class="button-wrapper">
 		<button type="button" onclick="driving();">Driving</button>
-		<br>
 		<button type="button" onclick="walking();">Walking</button>
+		</div>
 	</div>
 	<div id="map"></div>
 	<div class="attribution">
@@ -140,7 +141,7 @@
 				console.log('token defined: ' + token);
 			});
 
-			
+
 			var showNotification = function() {
 				var instance = new Notification(
 						'HitchhikerGO!', {
@@ -149,7 +150,7 @@
 						}
 					);
 			}
-				
+
 			/**
 			 * Request newest locations from server and update markers
 			 * @param  {List} markers_list list of current markers
@@ -162,16 +163,16 @@
 						console.log('request latest locations');
 						markers = updateMarkers(data, markers_list, map);
 						markers_list = [];
-						
+
 						for(var i=0; i<data.length; i++) {
 							loc = data[i];
 							// don't compare against self
 							if(loc.id !== token && loc.walking !== walking) {
-							      
+
 							    var from = new google.maps.LatLng(loc.latitude,loc.longitude);
 								var to   = new google.maps.LatLng(latitude, longitude);
 								var dist = google.maps.geometry.spherical.computeDistanceBetween(from, to); // returns in meters
-			
+
 								if (dist < 15) {
 									showNotification();
 									break;
