@@ -38,7 +38,7 @@
 		var container = document.getElementById("container");
 		var map, markers;
 		var latitude, longitude, accuracy;
-		var lizsvar = '';//'https://gotta-catch-a-ride-go.mybluemix.net/';
+		var lizsvar = 'https://gotta-catch-a-ride-go.mybluemix.net/';
 
 		var walkImage = {
 			url:'images/pedestrian-walking.png',
@@ -88,15 +88,15 @@
 			/**
 			 * Request newest locations from server and update markers
 			 * @param  {Integer} token   value to designate unique key
-			 * @param  {List} markers list
+			 * @param  {List} old_markers list of current markers
 			 * @param  {Google Map} map
 			 * @return {None}
 			 */
-			function getLocations(markers, map) {
+			function getLocations(old_markers, map) {
 				if (token) {
 					$.get(lizsvar + "rest/locations", function( data ) {
 						console.log('request latest locations');
-						markers = updateMarkers(data, markers, map);
+						markers = updateMarkers(data, old_markers, map);
 					});
 				}
 				else {
@@ -254,7 +254,7 @@
 		    window.setInterval(function() {
 				console.log('getting and updating locations');
 				updateLocation();
-				getLocations();
+				getLocations(markers, map);
 			}, 10000);
 		});
 	</script>
