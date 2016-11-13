@@ -195,7 +195,7 @@
 							position: new google.maps.LatLng(data[i].latitude, data[i].longitude),
 							map: map,
 						});
-						if (new_mark.walking) {
+						if (data[i].walking) {
 							new_mark.setIcon(walkImage.url);
 						}
 						else {
