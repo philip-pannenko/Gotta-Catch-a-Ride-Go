@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<meta name="viewport" content="initial-scale=1.0">
 	<title>Catch a Ride Go!</title>
 
 	<style>
@@ -49,10 +49,15 @@
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 	<script>
-		$( window ).ready(function() {
 		var token;
-		$.get("rest/token", function( data ) {
+
+		$( window ).ready(function() {
+
+		$.get("https://gotta-catch-a-ride-go.mybluemix.net/rest/token", function( data ) {
 			token = data;
+			if (myMarker) {
+				myMarker.id = token;
+			}
 			console.log('token defined: ' + token);
 		});
 
@@ -64,6 +69,7 @@
 		myMarker = new google.maps.Marker({
 			label: 'Me!',
 			icon: walkImage,
+			id: token,
 		});
 
 		/**
@@ -119,13 +125,12 @@
 				payload.message = 'from browser';
 
 				$.ajax({
-					url: 'rest/location',
+					url: 'https://gotta-catch-a-ride-go.mybluemix.net/rest/location',
 					type: 'post',
 					dataType: 'json',
 					contentType: 'application/json',
-					data: JSON.stringify(payload),
 					success: function( data, textStatus, jQxhr) {
-						console.log('update location:'+data);
+						console.log('update location: <'+payload.latitude+','+payload.longitude+'>');
 					},
 					error: function( jqXhr, textStatus, errorThrown) {
 						console.log( errorThrown );
@@ -144,11 +149,10 @@
 		 * @param  {Google Map} map
 		 * @return {None}
 		 */
-		function updateLocations(token, markers, map) {
+		function updateLocations(markers, map) {
 			if (token) {
-				$.get("rest/locations", function( data ) {
-					console.log('locations prior to this browser submits data to server');
-					console.log(JSON.stringify(data,null,' '));
+				$.get("https://gotta-catch-a-ride-go.mybluemix.net/rest/locations", function( data ) {
+					console.log('request latest locations');
 					markers = updateMarkers(data, markers, map);
 				});
 			}
@@ -174,14 +178,15 @@
 			for (var k in old_markers) {
 				markerFound = false;
 				for(var l in data) {
-					if (data[l].id == old_markers[k].id && data[l].id != token) {
+					if (data[l].id == old_markers[k].id) {
 						markerFound = true;
+						break;
 					}
 				}
 				if (markerFound) {
 					markers.push(old_marker[k]);
 				}
-				else {
+				else if (!markerFound && old_markers[k].id != myMarker.id) {
 					// remove from map and naturally drop by not adding
 					old_markers[k].setMap(null);
 				}
@@ -191,9 +196,10 @@
 			for (var i in data) {
 				markerFound = false;
 				for (var j in old_markers) {
-					if (markers[j].id == data[i].id && markers[i] != token) {
+					if (markers[j].id == data[i].id && markers[i] != myMarker.id) {
 						markers[j].setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
 						markerFound = true;
+						break;
 					}
 				}
 				if (!markerFound) {
@@ -214,7 +220,7 @@
 		 * @return {None}
 		 */
 		function initMap() {
-
+			var centered = false;
 			map = new google.maps.Map(document.getElementById('map'), {
 				zoom: 15,
 				center: {lat: 41.340485, lng: -72.0991807}
@@ -227,9 +233,12 @@
 						lat: position.coords.latitude,
 						lng: position.coords.longitude
 					};
-
-					map.setCenter(pos);
-					updateLocations(token, markers, map);
+					if (!centered) {
+						// only do this on initial
+						map.setCenter(pos);
+						centered = true;
+					}
+					updateLocations(markers, map);
 					updateMyLocation(myMarker, pos.lat, pos.lng);
 				}, function() {
 					handleLocationError(true, map.getCenter());
@@ -254,6 +263,11 @@
 	    }
 
 	    initMap();
+
+	    window.setInterval(function() {
+			console.log('getting and updating locations');
+			updateLocations(markers, map);
+		}, 6000);
 	});
 	</script>
 </body>
