@@ -23,14 +23,17 @@
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 	<script>
+		var walking = true;
 		function close() {
 			document.getElementById("options").style.display = 'none';
 			document.getElementById("logo").style.fontSize = '1em';
 		}
 		function driving() {
+			walking = false;
 			close();
 		}
 		function walking() {
+			walking = true;
 			close();
 		}
 
@@ -60,10 +63,16 @@
 			anchor: new google.maps.Point(0,32)
 		};
 
-
+		var myIcon;
+		if (walking) {
+			 myIcon = walkImage;
+		}
+		else {
+			myIcon = busImage;
+		}
 		var myMarker = new google.maps.Marker({
 			label: 'Me!',
-			icon: walkImage,
+			icon: myIcon,
 			id: token,
 		});
 
