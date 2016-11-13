@@ -35,39 +35,24 @@
 	</script>
 	<script>
 		var token;
-
-		$( window ).ready(function() {
-
-		$.get("https://gotta-catch-a-ride-go.mybluemix.net/rest/token", function( data ) {
-			token = data;
-			if (myMarker) {
-				myMarker.id = token;
-			}
-			console.log('token defined: ' + token);
-		});
-
-		//////////////////////////////////
-		/// GEO LOCATION THINGS
 		var container = document.getElementById("container");
-		var map, myMarker, markers;
+		var map, markers;
+		var latitude, longitude, accuracy;
+		var lizsvar = '';//https://gotta-catch-a-ride-go.mybluemix.net/';
 
-		myMarker = new google.maps.Marker({
+		var myMarker = new google.maps.Marker({
 			label: 'Me!',
 			icon: walkImage,
 			id: token,
 		});
-
-		/**
-		 * Google image icon for walking person
-		 * @type {Object}
-		 */
+		
 		var walkImage = {
 			url:'images/pedestrian-walking.png',
 			size: new google.maps.Size(20,32),
 			origin: new google.maps.Point(0,0),
 			anchor: new google.maps.Point(0,32)
 		};
-
+		
 		/**
 		 * Google image icon for bus, should be car later
 		 * @type {Object}
@@ -88,173 +73,190 @@
 			maximumAge: 30000,
 			timeout: 27000,
 		};
+		
+		$( window ).ready(function() {
 
-		/**
-		 * Update marker location and update location on server
-		 * @param  {float} latitude
-		 * @param  {float} longitude
-		 * @param  {float} accuracy  value
-		 * @return {None}
-		 */
-		function updateMyLocation(curMarker, latitude, longitude, accuracy) {
-			if (curMarker && latitude && longitude) {
-				console.log("<"+latitude+","+longitude+">");
-				curMarker.setPosition(new google.maps.LatLng(latitude, longitude));
-			}
-			if (token) {
-				var payload = {};
-				payload.latitude = latitude;
-				payload.longitude = longitude;
-				payload.accuracy = accuracy;
-				payload.id = token;
-				payload.message = 'from browser';
-
-				$.ajax({
-					url: 'https://gotta-catch-a-ride-go.mybluemix.net/rest/location',
-					type: 'post',
-					dataType: 'json',
-					contentType: 'application/json',
-					success: function( data, textStatus, jQxhr) {
-						console.log('update location: <'+payload.latitude+','+payload.longitude+'>');
-					},
-					error: function( jqXhr, textStatus, errorThrown) {
-						console.log( errorThrown );
-					}
-				});
-			}
-			else {
-				console.log("token undefined for update location");
-			}
-			return curMarker;
-		}
-
-		/**
-		 * Request newest locations from server and update markers
-		 * @param  {Integer} token   value to designate unique key
-		 * @param  {List} markers list
-		 * @param  {Google Map} map
-		 * @return {None}
-		 */
-		function updateLocations(markers, map) {
-			if (token) {
-				$.get("https://gotta-catch-a-ride-go.mybluemix.net/rest/locations", function( data ) {
-					console.log('request latest locations');
-					markers = updateMarkers(data, markers, map);
-				});
-			}
-			else {
-				console.log("missing token");
-			}
-		}
-
-		/**
-		 * Update existing markers with new data
-		 * @param  {Object} data contains new lat, long locations from server or otherwise
-		 * @param  {Object} markers contains existing lat, long locations
-		 * @param {Google Map}	map existing map object to append markers on
-		 * @return {List}      updated list of markers
-		 */
-		function updateMarkers(data, old_markers, map) {
-			console.log("updating locations");
-			// longitude, latitude, id
-			var marker = [];
-			var markerFound = false;
-
-			// remove old values from the map
-			for (var k in old_markers) {
-				markerFound = false;
-				for(var l in data) {
-					if (data[l].id == old_markers[k].id) {
-						markerFound = true;
-						break;
-					}
+			$.get(lizsvar + "rest/token", function( data ) {
+				token = data;
+				if (myMarker) {
+					myMarker.id = token;
 				}
-				if (markerFound) {
-					markers.push(old_marker[k]);
-				}
-				else if (!markerFound && old_markers[k].id != myMarker.id) {
-					// remove from map and naturally drop by not adding
-					old_markers[k].setMap(null);
-				}
-			}
-
-			// update positions of remaining
-			for (var i in data) {
-				markerFound = false;
-				for (var j in old_markers) {
-					if (markers[j].id == data[i].id && markers[i] != myMarker.id) {
-						markers[j].setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
-						markerFound = true;
-						break;
-					}
-				}
-				if (!markerFound) {
-					// add new marker
-					new google.maps.Marker({
-						position: new google.maps.LatLng(data[i].latitude, data[i].longitude),
-						map: map,
+				console.log('token defined: ' + token);
+			});
+	
+			/**
+			 * Request newest locations from server and update markers
+			 * @param  {Integer} token   value to designate unique key
+			 * @param  {List} markers list
+			 * @param  {Google Map} map
+			 * @return {None}
+			 */
+			function getLocations(markers, map) {
+				if (token) {
+					$.get(lizsvar + "rest/locations", function( data ) {
+						console.log('request latest locations');
+						markers = updateMarkers(data, markers, map);
 					});
 				}
+				else {
+					console.log("missing token");
+				}
 			}
-
-			return markers;
-		}
-
-
-		/**
-		 * Initialize Google Map variables and populate object
-		 * @return {None}
-		 */
-		function initMap() {
-			var centered = false;
-			map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 15,
-				center: {lat: 41.340485, lng: -72.0991807}
-			});
-
-			// Try HTML5 geolocation.
-			if (navigator.geolocation) {
-				navigator.geolocation.watchPosition(function(position) {
-					var pos = {
-						lat: position.coords.latitude,
-						lng: position.coords.longitude
-					};
-					if (!centered) {
-						// only do this on initial
-						map.setCenter(pos);
-						centered = true;
+	
+			/**
+			 * Update existing markers with new data
+			 * @param  {Object} data contains new lat, long locations from server or otherwise
+			 * @param  {Object} markers contains existing lat, long locations
+			 * @param {Google Map}	map existing map object to append markers on
+			 * @return {List}      updated list of markers
+			 */
+			function updateMarkers(data, old_markers, map) {
+				console.log("updating locations");
+				// longitude, latitude, id
+				var marker = [];
+				var markerFound = false;
+	
+				// remove old values from the map
+				for (var k in old_markers) {
+					markerFound = false;
+					for(var l in data) {
+						if (data[l].id == old_markers[k].id) {
+							markerFound = true;
+							break;
+						}
 					}
-					updateLocations(markers, map);
-					myMarker = updateMyLocation(myMarker, pos.lat, pos.lng);
-				}, function() {
-					handleLocationError(true, map.getCenter());
-				}, geoOptions);
+					if (markerFound) {
+						markers.push(old_marker[k]);
+					}
+					else if (!markerFound && old_markers[k].id != myMarker.id) {
+						// remove from map and naturally drop by not adding
+						old_markers[k].setMap(null);
+					}
+				}
+	
+				// update positions of remaining
+				for (var i in data) {
+					markerFound = false;
+					for (var j in old_markers) {
+						if (markers[j].id == data[i].id && markers[i] != myMarker.id) {
+							markers[j].setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
+							markerFound = true;
+							break;
+						}
+					}
+					if (!markerFound) {
+						// add new marker
+						new google.maps.Marker({
+							position: new google.maps.LatLng(data[i].latitude, data[i].longitude),
+							map: map,
+						});
+					}
+				}
+	
+				return markers;
 			}
-			else {
-				// Browser doesn't support Geolocation
-				handleLocationError(false, map.getCenter());
+			 
+			 
+			 var updateLocation = function() {
+				 debugger;
+				 if (token) {
+					var payload = {};
+					payload.latitude = latitude;
+					payload.longitude = longitude;
+					payload.accuracy = accuracy;
+					payload.id = token;
+					payload.message = 'from browser';
+	
+					$.ajax({
+						url: lizsvar + 'rest/location',
+						type: 'post',
+						dataType: 'json',
+						data: JSON.stringify(payload),
+						contentType: 'application/json',
+						success: function( data, textStatus, jQxhr) {
+							console.log('update location: <'+payload.latitude+','+payload.longitude+'>');
+						},
+						error: function( jqXhr, textStatus, errorThrown) {
+							console.log( errorThrown );
+						}
+					});
+				}
+			 }
+
+	
+			 var calculateLocation = function() {
+				var centered = false;
+					
+				// Try HTML5 geolocation.
+				if (navigator.geolocation) {
+					navigator.geolocation.watchPosition(function(position) {
+						
+						var pos = {
+							lat: position.coords.latitude,
+							lng: position.coords.longitude
+						};
+						if (!centered) {
+							// only do this on initial
+							map.setCenter(pos);
+							centered = true;
+						}
+						
+						latitude = position.coords.latitude;
+						longitude = position.coords.longitude;
+						accuracy = position.coords.accuracy;
+
+						if (latitude && longitude) {
+							console.log("<"+latitude+","+longitude+">");
+							myMarker.setPosition(new google.maps.LatLng(latitude, longitude));
+						} else {
+							console.log("token undefined for update location");
+						}
+						
+					}, function() {
+						handleLocationError(true, map.getCenter());
+					}, geoOptions);
+				}
+				else {
+					// Browser doesn't support Geolocation
+					handleLocationError(false, map.getCenter());
+				}
+			 }
+
+			function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+				infoWindow.setPosition(pos);
+				infoWindow.setContent(browserHasGeolocation ?
+					'Error: The Geolocation service failed.' :
+					'Error: Your browser doesn\'t support geolocation.');
 			}
-
-			function handleLocationError(navigatorAvail, mapCenter) {
-				var infoWindow = new google.maps.InfoWindow({map: map});
-
-			}
-
-	        markers = [];
-	        markers.push(myMarker);
-
-	        // Add a marker clusterer to manage the markers.
-	        var markerCluster = new MarkerClusterer(map, markers,
-	        	{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-	    }
-
-	    initMap();
-
-	    window.setInterval(function() {
-			console.log('getting and updating locations');
-			updateLocations(markers, map);
-		}, 6000);
-	});
+			
+			/**
+			 * Initialize Google Map variables and populate object
+			 * @return {None}
+			 */
+			function initMap() {
+				map = new google.maps.Map(document.getElementById('map'), {
+					zoom: 15,
+					center: {lat: 41.340485, lng: -72.0991807}
+				});
+	
+				calculateLocation();
+	
+			    markers = [];
+		        markers.push(myMarker);
+	
+		        // Add a marker clusterer to manage the markers.
+		        var markerCluster = new MarkerClusterer(map, markers,
+		        	{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+		    }
+	
+		    initMap();
+	
+		    window.setInterval(function() {
+				console.log('getting and updating locations');
+				updateLocation();
+				getLocations();
+			}, 10000);
+		});
 	</script>
 </body>
 </html>
