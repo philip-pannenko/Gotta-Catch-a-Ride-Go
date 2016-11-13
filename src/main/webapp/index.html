@@ -24,13 +24,16 @@
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 	<script>
-		var walking = true;
+		var walking;
 		function close() {
 			document.getElementById("options").style.display = 'none';
 			document.getElementById("logo").style.fontSize = '1em';
 		}
 		function driving() {
 			walking = false;
+			if (myMarker && carImage) {
+				myMarker.setIcon('images/racing.png');
+			}
 			close();
 		}
 		function walking() {
@@ -38,11 +41,9 @@
 			close();
 		}
 
-		close();
 	</script>
 	<script>
 		var token;
-		var container = document.getElementById("container");
 		var map, markers;
 		var latitude, longitude, accuracy;
 
@@ -54,11 +55,22 @@
 		};
 
 		/**
-		 * Google image icon for bus, should be car later
+		 * Google image icon for car
 		 * @type {Object}
 		 */
 		var carImage = {
 			url:'images/car.png',
+			size: new google.maps.Size(32,32),
+			origin: new google.maps.Point(0,0),
+			anchor: new google.maps.Point(0,32)
+		};
+
+		/**
+		 * Google image icon for sports car
+		 * @type {Object}
+		 */
+		var sportsCarImage = {
+			url:'images/racing.png',
 			size: new google.maps.Size(32,32),
 			origin: new google.maps.Point(0,0),
 			anchor: new google.maps.Point(0,32)
@@ -69,10 +81,9 @@
 			 myIcon = walkImage;
 		}
 		else {
-			myIcon = carImage;
+			myIcon = sportsCarImage;
 		}
 		var myMarker = new google.maps.Marker({
-			label: 'Me!',
 			icon: myIcon,
 			id: token,
 		});
@@ -165,6 +176,12 @@
 							position: new google.maps.LatLng(data[i].latitude, data[i].longitude),
 							map: map,
 						});
+						if (new_mark.walking) {
+							new_mark.icon = walkImage;
+						}
+						else {
+							new_mark.icon = carImage;
+						}
 						new_mark.id = data[i].id;
 						temp.push(new_mark);
 					}
