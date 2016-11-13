@@ -38,21 +38,15 @@
 		var container = document.getElementById("container");
 		var map, markers;
 		var latitude, longitude, accuracy;
-		var lizsvar = '';//https://gotta-catch-a-ride-go.mybluemix.net/';
+		var lizsvar = 'https://gotta-catch-a-ride-go.mybluemix.net/';
 
-		var myMarker = new google.maps.Marker({
-			label: 'Me!',
-			icon: walkImage,
-			id: token,
-		});
-		
 		var walkImage = {
 			url:'images/pedestrian-walking.png',
 			size: new google.maps.Size(20,32),
 			origin: new google.maps.Point(0,0),
 			anchor: new google.maps.Point(0,32)
 		};
-		
+
 		/**
 		 * Google image icon for bus, should be car later
 		 * @type {Object}
@@ -64,6 +58,13 @@
 			anchor: new google.maps.Point(0,32)
 		};
 
+
+		var myMarker = new google.maps.Marker({
+			label: 'Me!',
+			icon: walkImage,
+			id: token,
+		});
+
 		/**
 		 * Geo-location options for increased accuracy
 		 * @type {Object}
@@ -73,7 +74,7 @@
 			maximumAge: 30000,
 			timeout: 27000,
 		};
-		
+
 		$( window ).ready(function() {
 
 			$.get(lizsvar + "rest/token", function( data ) {
@@ -83,7 +84,7 @@
 				}
 				console.log('token defined: ' + token);
 			});
-	
+
 			/**
 			 * Request newest locations from server and update markers
 			 * @param  {Integer} token   value to designate unique key
@@ -102,7 +103,7 @@
 					console.log("missing token");
 				}
 			}
-	
+
 			/**
 			 * Update existing markers with new data
 			 * @param  {Object} data contains new lat, long locations from server or otherwise
@@ -115,7 +116,7 @@
 				// longitude, latitude, id
 				var marker = [];
 				var markerFound = false;
-	
+
 				// remove old values from the map
 				for (var k in old_markers) {
 					markerFound = false;
@@ -133,7 +134,7 @@
 						old_markers[k].setMap(null);
 					}
 				}
-	
+
 				// update positions of remaining
 				for (var i in data) {
 					markerFound = false;
@@ -152,13 +153,12 @@
 						});
 					}
 				}
-	
+
 				return markers;
 			}
-			 
-			 
+
+
 			 var updateLocation = function() {
-				 debugger;
 				 if (token) {
 					var payload = {};
 					payload.latitude = latitude;
@@ -166,7 +166,7 @@
 					payload.accuracy = accuracy;
 					payload.id = token;
 					payload.message = 'from browser';
-	
+
 					$.ajax({
 						url: lizsvar + 'rest/location',
 						type: 'post',
@@ -181,16 +181,16 @@
 						}
 					});
 				}
-			 }
+			 };
 
-	
+
 			 var calculateLocation = function() {
 				var centered = false;
-					
+
 				// Try HTML5 geolocation.
 				if (navigator.geolocation) {
 					navigator.geolocation.watchPosition(function(position) {
-						
+
 						var pos = {
 							lat: position.coords.latitude,
 							lng: position.coords.longitude
@@ -200,7 +200,7 @@
 							map.setCenter(pos);
 							centered = true;
 						}
-						
+
 						latitude = position.coords.latitude;
 						longitude = position.coords.longitude;
 						accuracy = position.coords.accuracy;
@@ -211,7 +211,7 @@
 						} else {
 							console.log("token undefined for update location");
 						}
-						
+
 					}, function() {
 						handleLocationError(true, map.getCenter());
 					}, geoOptions);
@@ -220,7 +220,7 @@
 					// Browser doesn't support Geolocation
 					handleLocationError(false, map.getCenter());
 				}
-			 }
+			 };
 
 			function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 				infoWindow.setPosition(pos);
@@ -228,7 +228,7 @@
 					'Error: The Geolocation service failed.' :
 					'Error: Your browser doesn\'t support geolocation.');
 			}
-			
+
 			/**
 			 * Initialize Google Map variables and populate object
 			 * @return {None}
@@ -238,19 +238,19 @@
 					zoom: 15,
 					center: {lat: 41.340485, lng: -72.0991807}
 				});
-	
+
 				calculateLocation();
-	
+
 			    markers = [];
 		        markers.push(myMarker);
-	
+
 		        // Add a marker clusterer to manage the markers.
 		        var markerCluster = new MarkerClusterer(map, markers,
 		        	{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 		    }
-	
+
 		    initMap();
-	
+
 		    window.setInterval(function() {
 				console.log('getting and updating locations');
 				updateLocation();
