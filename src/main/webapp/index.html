@@ -15,7 +15,7 @@
 	</div>
 	<div id="map"></div>
 	<div class="attribution">Icons made by <a href="http://www.flaticon.com/authors/scott-de-jonge" title="Scott de Jonge">Scott de Jonge</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-
+	<script type="text/javascript" src="local.js"></script>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2yMJAeJ7ZX_xYdgchCyXHEvcdHEuTJcc&libraries=geometry,places"></script>
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
@@ -38,7 +38,6 @@
 		var container = document.getElementById("container");
 		var map, markers;
 		var latitude, longitude, accuracy;
-		var lizsvar = '';//https://gotta-catch-a-ride-go.mybluemix.net/';
 
 		var walkImage = {
 			url:'images/pedestrian-walking.png',
@@ -77,7 +76,7 @@
 
 		$( window ).ready(function() {
 
-			$.get(lizsvar + "rest/token", function( data ) {
+			$.get((local_url?local_url:'') + "rest/token", function( data ) {
 				token = data;
 				if (myMarker) {
 					myMarker.id = token;
@@ -94,7 +93,7 @@
 			 */
 			function getLocations(old_markers, map) {
 				if (token) {
-					$.get(lizsvar + "rest/locations", function( data ) {
+					$.get((local_url?local_url:'') + "rest/locations", function( data ) {
 						console.log('request latest locations');
 						markers = updateMarkers(data, old_markers, map);
 					});
@@ -168,7 +167,7 @@
 					payload.message = 'from browser';
 
 					$.ajax({
-						url: lizsvar + 'rest/location',
+						url: (local_url?local_url:'') + 'rest/location',
 						type: 'post',
 						dataType: 'json',
 						data: JSON.stringify(payload),

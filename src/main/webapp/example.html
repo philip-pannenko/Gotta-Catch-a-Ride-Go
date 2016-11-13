@@ -10,95 +10,43 @@
 	
 	<script>
 	
-	var token = -1;
-	var pos = null;
-	
-	if (navigator.geolocation) {
-		navigator.geolocation.watchPosition(function(position) {
-			pos = {
-				lat: position.coords.latitude,
-				lng: position.coords.longitude
-			};
+	// Determine the correct object to use
+	var notification = window.Notification || window.mozNotification || window.webkitNotification;
 
-			console.log(pos);
-			
-		}, function(err) {
-			console.log(err);
-		});
+	// The user needs to allow this
+	if ('undefined' === typeof notification)
+	    alert('Web notification not supported');
+	else
+	    notification.requestPermission(function(permission){});
+
+	// A function handler
+	function Notify(titleText, bodyText)
+	{
+	    if ('undefined' === typeof notification)
+	        return false;       //Not supported....
+	    var noty = new notification(
+	        titleText, {
+	            body: bodyText,
+	            dir: 'auto', // or ltr, rtl
+	            lang: 'EN', //lang used within the notification.
+	            tag: 'notificationPopup', //An element ID to get/set the content
+	            icon: '' //The URL of an image to be used as an icon
+	        }
+	    );
+	    noty.onclick = function () {
+	        console.log('notification.Click');
+	    };
+	    noty.onerror = function () {
+	        console.log('notification.Error');
+	    };
+	    noty.onshow = function () {
+	        console.log('notification.Show');
+	    };
+	    noty.onclose = function () {
+	        console.log('notification.Close');
+	    };
+	    return true;
 	}
-	
-	$( window ).ready(function() {
-		$.get("rest/token", function( data ) {
-			token = data;
-			console.log('token defined: ' + token);
-		});
-		
-		var sendData = function () {
-			if(!token) {
-				return;
-			}
-			var payload = {}; 
-			payload.latitude = pos.lat;
-			payload.longitude = pos.lng;
-			payload.accuracy = 1;
-			payload.id = token;
-			payload.message = 'from browser';
-			
-			$.ajax({
-				url: 'rest/location',
-				type: 'post',
-				dataType: 'json',
-				contentType: 'application/json',
-				data: JSON.stringify(payload),
-				success: function( data, textStatus, jQxhr ){
-			        console.log(data);
-			    },
-			    error: function( jqXhr, textStatus, errorThrown ){
-			        console.log( errorThrown );
-			    }
-			});
-		};
-		
-		$.get("rest/locations", function( data ) {
-			console.log('locations prior to this browser submits data to server');
-			console.log(JSON.stringify(data,null,' '));
-		});
-		
-		var getLocations = function() {
-			$.get("rest/locations", function( data ) {
-				console.log(JSON.stringify(data,null,' '));
-				
-				for(var i=0; i<data.length; i++) {
-					loc = data[i];
-				
-					// don't compare against self
-					if(loc.id !== token) {
-					      
-					    var from = new google.maps.LatLng(loc.latitude,loc.longitude);
-						var to   = new google.maps.LatLng(pos.lat, pos.lng);
-						var dist = google.maps.geometry.spherical.computeDistanceBetween(from, to); // returns in meters
-	
-						if (dist < 15) {
-							console.log('proximity less than 50 feet');
-						}
-
-					}
-				}
-			});
-		}
-		
-		window.setInterval(function() {
-			console.log('sendingData');
-			sendData();
-		}, 5000);
-		
-		window.setInterval(function() {
-			console.log('gettingLocations');
-			getLocations();
-		}, 6000);
-
-		
-	});
 	
 	</script>
 	
@@ -107,10 +55,6 @@
 <body id="container">
 	
 	<h1>1</h1>
-	
-	
-	
-	
 	
 </body>
 </html>
