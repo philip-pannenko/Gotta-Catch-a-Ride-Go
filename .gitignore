@@ -1,2 +1,4 @@
 /src/main/webapp/local.js
 .idea
+/.apt_generated/
+/target/

@@ -140,7 +140,16 @@
 				console.log('token defined: ' + token);
 			});
 
-
+			
+			var showNotification = function() {
+				var instance = new Notification(
+						'HitchhikerGO!', {
+							body: walking ? 'Driver Incoming within 50ft!':'Look around! Pedestrian looking for a ride!'
+							,icon: walking ? 'images/car.png':'images/alien.png'
+						}
+					);
+			}
+				
 			/**
 			 * Request newest locations from server and update markers
 			 * @param  {List} markers_list list of current markers
@@ -153,6 +162,24 @@
 						console.log('request latest locations');
 						markers = updateMarkers(data, markers_list, map);
 						markers_list = [];
+						
+						for(var i=0; i<data.length; i++) {
+							loc = data[i];
+						debugger;
+							// don't compare against self
+							if(loc.id !== token && loc.walking !== walking) {
+							      
+							    var from = new google.maps.LatLng(loc.latitude,loc.longitude);
+								var to   = new google.maps.LatLng(latitude, longitude);
+								var dist = google.maps.geometry.spherical.computeDistanceBetween(from, to); // returns in meters
+			
+								if (dist < 15) {
+									showNotification();
+									break;
+// 									console.log('proximity less than 50 feet');
+								}
+							}
+						}
 					});
 				}
 				else {
