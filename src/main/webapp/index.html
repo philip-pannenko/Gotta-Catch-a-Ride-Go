@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="initial-scale=1.0">
-	<title>Catch a Ride Go!</title>
+	<title>HitchhikerGO! - Carpool finder</title>
 	<script>
 		var local_url = '';
 	</script>
@@ -27,7 +27,7 @@
 	<meta name="theme-color" content="#ffffff">
 </head>
 <body id="container">
-	<div class="logo-overlay" id="logo">Stalker v0.6</div>
+	<div class="logo-overlay" id="logo">HitchhikerGO!</div>
 	<div class="options" id="options">
 		<button type="button" onclick="driving();">Driving</button>
 		<br>
@@ -125,7 +125,7 @@
 			function walking() {
 				walking = true;
 				if (myMarker && walkImage) {
-					myMarker.setIcon(sportsCarImage.url);
+					myMarker.setIcon(walkImage.url);
 				}
 				close();
 			}
