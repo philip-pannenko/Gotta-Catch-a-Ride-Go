@@ -42,29 +42,10 @@
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 	<script src="https://cdn.klokantech.com/maptilerlayer/v1/index.js"></script>
 	<script>
-		var walking;
-		function close() {
-			document.getElementById("options").style.display = 'none';
-			document.getElementById("logo").style.fontSize = '1em';
-		}
-		function driving() {
-			walking = false;
-			if (myMarker && carImage) {
-				myMarker.setIcon(sportsCarImage.url);
-			}
-			close();
-		}
-		function walking() {
-			walking = true;
-			close();
-		}
-
-	</script>
-	<script>
 		var token;
 		var map, markers;
 		var latitude, longitude, accuracy;
-
+		var walking;
 		var geoloccontrol;
 
 		var walkImage = {
@@ -118,6 +99,53 @@
 			timeout: 27000,
 		};
 
+		/**
+			 * Close the initial screen (with options for Driving or Walking)
+			 * @return {None}
+			 */
+			function close() {
+				document.getElementById("options").style.display = 'none';
+				document.getElementById("logo").style.fontSize = '1em';
+			}
+			/**
+			 * Set the marker as a driver (car) and bounce; Close initial screen;
+			 * @return {None}
+			 */
+			function driving() {
+				walking = false;
+				if (myMarker && carImage) {
+					myMarker.setIcon(sportsCarImage.url);
+					toggleBounce(myMarker, 2000);
+				}
+				close();
+			}
+			/**
+			 * Set the marker as
+			 * @return {[type]} [description]
+			 */
+			function walking() {
+				walking = true;
+				if (myMarker && walkImage) {
+					myMarker.setIcon(sportsCarImage.url);
+					toggleBounce(myMarker, 2000);
+				}
+				close();
+			}
+
+			/**
+			 * toggle a bounce  for a marker
+			 * @param  {Marker} marker map object
+			 * @return {None}
+			 */
+			function toggleBounce(marker, time) {
+				if (marker.getAnimation() !== null) {
+					marker.setAnimation(null);
+				} else {
+					marker.setAnimation(google.maps.Animation.BOUNCE);
+					setTimeout(toggleBounce(myMarker), time);
+				}
+			}
+
 		$( window ).ready(function() {
 
 			$.get((local_url?local_url:'') + "rest/token", function( data ) {
@@ -127,6 +155,7 @@
 				}
 				console.log('token defined: ' + token);
 			});
+
 
 			/**
 			 * Request newest locations from server and update markers
@@ -278,10 +307,9 @@
 			 };
 
 			function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-				infoWindow.setPosition(pos);
-				infoWindow.setContent(browserHasGeolocation ?
-					'Error: The Geolocation service failed.' :
-					'Error: Your browser doesn\'t support geolocation.');
+				$("#options").append('<p style="color: red">' +
+					'Error: The Geolocation service failed.<br>' +
+					'Error: Your browser doesn\'t support geolocation.</p>');
 			}
 
 			/**
