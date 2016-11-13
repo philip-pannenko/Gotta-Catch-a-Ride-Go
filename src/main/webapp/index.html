@@ -4,50 +4,35 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="initial-scale=1.0">
 	<title>Catch a Ride Go!</title>
-
-	<style>
-      /* Always set the map height explicitly to define the size of the div
-      * element that contains the map. */
-      #map {
-      	height: 100%;
-      	width: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-      	height: 100%;
-      	width: 100%;
-      	margin: 0;
-      	padding: 0;
-      }
-
-      .logo-overlay {
-      	position:absolute;
-      	top: 30px;
-      	left: 5px;
-      	background-image: url("images/catch-a-ride.png");
-      	height: 60px;
-      	width: 468px;
-      	z-index: 200;
-      }
-      .attribution {
-      	position: absolute;
-      	bottom: 25px;
-      	left: 5px;
-      	height: 10px;
-      	width: 90%;
-      	z-index: 200;
-      	font-size: 8px;
-      }
-  </style>
+ 	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 </head>
 <body id="container">
-	<div class="logo-overlay"></div>
+	<div class="logo-overlay" id="logo">Stalker v0.6</div>
+	<div class="options" id="options">
+		<button type="button" onclick="driving();">Driving</button>
+		<br>
+		<button type="button" onclick="walking();">Walking</button>
+	</div>
 	<div id="map"></div>
 	<div class="attribution">Icons made by <a href="http://www.flaticon.com/authors/scott-de-jonge" title="Scott de Jonge">Scott de Jonge</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2yMJAeJ7ZX_xYdgchCyXHEvcdHEuTJcc&libraries=geometry,places"></script>
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+	<script>
+		function close() {
+			document.getElementById("options").style.display = 'none';
+			document.getElementById("logo").style.fontSize = '1em';
+		}
+		function driving() {
+			close();
+		}
+		function walking() {
+			close();
+		}
+
+		close();
+	</script>
 	<script>
 		var token;
 
