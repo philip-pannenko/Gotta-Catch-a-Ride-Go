@@ -90,15 +90,16 @@
 			/**
 			 * Request newest locations from server and update markers
 			 * @param  {Integer} token   value to designate unique key
-			 * @param  {List} old_markers list of current markers
+			 * @param  {List} markers_list list of current markers
 			 * @param  {Google Map} map
 			 * @return {None}
 			 */
-			function getLocations(old_markers, map) {
+			function getLocations(markers_list, map) {
 				if (token) {
 					$.get((local_url?local_url:'') + "rest/locations", function( data ) {
 						console.log('request latest locations');
-						markers = updateMarkers(data, old_markers, map);
+						markers = updateMarkers(data, markers_list, map);
+						markers_list = [];
 					});
 				}
 				else {
@@ -116,7 +117,7 @@
 			function updateMarkers(data, old_markers, map) {
 				console.log("updating locations");
 				// longitude, latitude, id
-				var marker = [];
+				var new_markers = [];
 				var markerFound = false;
 
 				// remove old values from the map
@@ -129,7 +130,7 @@
 						}
 					}
 					if (markerFound) {
-						markers.push(old_markers[k]);
+						new_markers.push(old_markers[k]);
 					}
 					else if (!markerFound && old_markers[k].id != myMarker.id) {
 						// remove from map and naturally drop by not adding
@@ -140,9 +141,9 @@
 				// update positions of remaining
 				for (var i in data) {
 					markerFound = false;
-					for (var j in old_markers) {
-						if (markers[j].id == data[i].id && markers[i] != myMarker.id) {
-							markers[j].setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
+					for (var j in new_markers) {
+						if (new_markers[j].id == data[i].id && new_markers[i] != myMarker.id) {
+							new_markers[j].setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
 							markerFound = true;
 							break;
 						}
@@ -155,8 +156,8 @@
 						});
 					}
 				}
-
-				return markers;
+				old_markers = []; // cheat
+				return new_markers;
 			}
 
 
