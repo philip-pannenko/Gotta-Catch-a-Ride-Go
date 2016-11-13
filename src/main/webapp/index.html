@@ -218,7 +218,8 @@
 					payload.longitude = longitude;
 					payload.accuracy = accuracy;
 					payload.id = token;
-					payload.message = 'from browser';
+					payload.message = '';
+				 	payload.walking = walking;
 
 					$.ajax({
 						url: (local_url?local_url:'') + 'rest/location',
@@ -295,7 +296,7 @@
 
 				calculateLocation();
 
-				geoloccontrol = new klokantech.GeolocationControl(map, 20);
+				geoloccontrol = new klokantech.GeolocationControl(map, 18);
 
 			    markers = [];
 		        markers.push(myMarker);
