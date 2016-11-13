@@ -17,7 +17,8 @@
 		<button type="button" onclick="walking();">Walking</button>
 	</div>
 	<div id="map"></div>
-	<div class="attribution">Icons made by <a href="http://www.flaticon.com/authors/scott-de-jonge" title="Scott de Jonge">Scott de Jonge</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+	<div class="attribution">
+		<div>Icons made by <a href="http://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> & <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div></div>
 	<script type="text/javascript" src="local.js"></script>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2yMJAeJ7ZX_xYdgchCyXHEvcdHEuTJcc&libraries=geometry,places"></script>
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
@@ -46,8 +47,8 @@
 		var latitude, longitude, accuracy;
 
 		var walkImage = {
-			url:'images/pedestrian-walking.png',
-			size: new google.maps.Size(20,32),
+			url:'images/alien.png',
+			size: new google.maps.Size(32,32),
 			origin: new google.maps.Point(0,0),
 			anchor: new google.maps.Point(0,32)
 		};
@@ -56,8 +57,8 @@
 		 * Google image icon for bus, should be car later
 		 * @type {Object}
 		 */
-		var busImage = {
-			url:'images/frontal-bus-silhouette.png',
+		var carImage = {
+			url:'images/car.png',
 			size: new google.maps.Size(32,32),
 			origin: new google.maps.Point(0,0),
 			anchor: new google.maps.Point(0,32)
@@ -68,7 +69,7 @@
 			 myIcon = walkImage;
 		}
 		else {
-			myIcon = busImage;
+			myIcon = carImage;
 		}
 		var myMarker = new google.maps.Marker({
 			label: 'Me!',
@@ -226,7 +227,7 @@
 							myMarker.setPosition(new google.maps.LatLng(latitude, longitude));
 							myMarker.setMap(map);
 						} else {
-							console.log("token undefined for update location");
+							console.log("latitude and longitude undefined for update location");
 						}
 
 					}, function() {
