@@ -111,10 +111,10 @@
 		 * @param  {float} accuracy  value
 		 * @return {None}
 		 */
-		function updateMyLocation(myMarker, latitude, longitude, accuracy) {
-			if (myMarker && latitude && longitude) {
+		function updateMyLocation(curMarker, latitude, longitude, accuracy) {
+			if (curMarker && latitude && longitude) {
 				console.log("<"+latitude+","+longitude+">");
-				myMarker.setPosition(new google.maps.LatLng(latitude, longitude));
+				curMarker.setPosition(new google.maps.LatLng(latitude, longitude));
 			}
 			if (token) {
 				var payload = {};
@@ -140,6 +140,7 @@
 			else {
 				console.log("token undefined for update location");
 			}
+			return curMarker;
 		}
 
 		/**
@@ -239,7 +240,7 @@
 						centered = true;
 					}
 					updateLocations(markers, map);
-					updateMyLocation(myMarker, pos.lat, pos.lng);
+					myMarker = updateMyLocation(myMarker, pos.lat, pos.lng);
 				}, function() {
 					handleLocationError(true, map.getCenter());
 				}, geoOptions);
