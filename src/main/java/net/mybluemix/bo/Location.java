@@ -9,12 +9,14 @@ public class Location {
 	private long id = -1;
 	private String message;
 	private Date age;
+	private boolean isWalking;
 
 	public Location() {
 		super();
 	}
 
-	public Location(float latitude, float longitude, int accuracy, long id, String message, Date age) {
+	public Location(float latitude, float longitude, int accuracy, long id, String message, Date age,
+			boolean isWalking) {
 		super();
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -22,6 +24,7 @@ public class Location {
 		this.id = id;
 		this.message = message;
 		this.age = age;
+		this.isWalking = isWalking;
 	}
 
 	public float getLatitude() {
@@ -72,10 +75,18 @@ public class Location {
 		this.age = age;
 	}
 
+	public boolean isWalking() {
+		return isWalking;
+	}
+
+	public void setWalking(boolean isWalking) {
+		this.isWalking = isWalking;
+	}
+
 	@Override
 	public String toString() {
 		return "Location [latitude=" + latitude + ", longitude=" + longitude + ", accuracy=" + accuracy + ", id=" + id
-				+ ", message=" + message + ", age=" + age + "]";
+				+ ", message=" + message + ", age=" + age + ", isWalking=" + isWalking + "]";
 	}
 
 }
