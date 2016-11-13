@@ -40,6 +40,7 @@
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2yMJAeJ7ZX_xYdgchCyXHEvcdHEuTJcc&libraries=geometry,places"></script>
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+	<script src="https://cdn.klokantech.com/maptilerlayer/v1/index.js"></script>
 	<script>
 		var walking;
 		function close() {
@@ -63,6 +64,8 @@
 		var token;
 		var map, markers;
 		var latitude, longitude, accuracy;
+
+		var geoloccontrol;
 
 		var walkImage = {
 			url:'images/alien.png',
@@ -291,6 +294,8 @@
 				});
 
 				calculateLocation();
+
+				geoloccontrol = new klokantech.GeolocationControl(map, 20);
 
 			    markers = [];
 		        markers.push(myMarker);
