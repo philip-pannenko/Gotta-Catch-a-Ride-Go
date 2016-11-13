@@ -52,7 +52,7 @@
 			url:'images/alien.png',
 			size: new google.maps.Size(32,32),
 			origin: new google.maps.Point(0,0),
-			anchor: new google.maps.Point(0,32)
+			anchor: new google.maps.Point(16,16)
 		};
 
 		/**
@@ -63,7 +63,7 @@
 			url:'images/car.png',
 			size: new google.maps.Size(32,32),
 			origin: new google.maps.Point(0,0),
-			anchor: new google.maps.Point(0,32)
+			anchor: new google.maps.Point(16,16)
 		};
 
 		/**
@@ -74,7 +74,7 @@
 			url:'images/racing.png',
 			size: new google.maps.Size(32,32),
 			origin: new google.maps.Point(0,0),
-			anchor: new google.maps.Point(0,32)
+			anchor: new google.maps.Point(16,16)
 		};
 
 		var myIcon;
@@ -115,7 +115,6 @@
 				walking = false;
 				if (myMarker && carImage) {
 					myMarker.setIcon(sportsCarImage.url);
-					toggleBounce(myMarker, 2000);
 				}
 				close();
 			}
@@ -127,23 +126,8 @@
 				walking = true;
 				if (myMarker && walkImage) {
 					myMarker.setIcon(sportsCarImage.url);
-					toggleBounce(myMarker, 2000);
 				}
 				close();
-			}
-
-			/**
-			 * toggle a bounce  for a marker
-			 * @param  {Marker} marker map object
-			 * @return {None}
-			 */
-			function toggleBounce(marker, time) {
-				if (marker.getAnimation() !== null) {
-					marker.setAnimation(null);
-				} else {
-					marker.setAnimation(google.maps.Animation.BOUNCE);
-					setTimeout(toggleBounce(myMarker), time);
-				}
 			}
 
 		$( window ).ready(function() {
