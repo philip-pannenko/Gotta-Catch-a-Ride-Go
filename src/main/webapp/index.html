@@ -138,6 +138,7 @@
 					}
 				}
 
+				temp = [];
 				// update positions of remaining
 				for (var i in data) {
 					markerFound = false;
@@ -150,14 +151,17 @@
 					}
 					if (!markerFound) {
 						// add new marker
-						new google.maps.Marker({
+						new_mark = new google.maps.Marker({
 							position: new google.maps.LatLng(data[i].latitude, data[i].longitude),
 							map: map,
 						});
+						new_mark.id = data[i].id;
+						temp.push(new_mark);
 					}
 				}
+				markers = new_markers.concat(temp); // shrug
 				old_markers = []; // cheat
-				return new_markers;
+				return markers;
 			}
 
 
@@ -258,7 +262,7 @@
 		    window.setInterval(function() {
 				console.log('getting and updating locations');
 				updateLocation();
-				getLocations(markers, map);
+				markers = getLocations(markers, map);
 			}, 10000);
 		});
 	</script>
