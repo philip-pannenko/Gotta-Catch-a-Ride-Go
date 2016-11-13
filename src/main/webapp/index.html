@@ -207,6 +207,7 @@
 						if (latitude && longitude) {
 							console.log("<"+latitude+","+longitude+">");
 							myMarker.setPosition(new google.maps.LatLng(latitude, longitude));
+							myMarker.setMap(map);
 						} else {
 							console.log("token undefined for update location");
 						}
@@ -234,7 +235,7 @@
 			 */
 			function initMap() {
 				map = new google.maps.Map(document.getElementById('map'), {
-					zoom: 17,
+					zoom: 18,
 					center: {lat: 41.340485, lng: -72.0991807}
 				});
 
