@@ -49,7 +49,7 @@
 	<script>
 		$( window ).ready(function() {
 		var token;
-		$.get("https://gotta-catch-a-ride-go.mybluemix.net/rest/token", function( data ) {
+		$.get("rest/token", function( data ) {
 			token = data;
 			console.log('token defined: ' + token);
 		});
@@ -117,7 +117,7 @@
 				payload.message = 'from browser';
 
 				$.ajax({
-					url: 'https://gotta-catch-a-ride-go.mybluemix.net/rest/location',
+					url: 'rest/location',
 					type: 'post',
 					dataType: 'json',
 					contentType: 'application/json',
@@ -144,7 +144,7 @@
 		 */
 		function updateLocations(token, markers, map) {
 			if (token) {
-				$.get("https://gotta-catch-a-ride-go.mybluemix.net/rest/locations", function( data ) {
+				$.get("rest/locations", function( data ) {
 					console.log('locations prior to this browser submits data to server');
 					console.log(JSON.stringify(data,null,' '));
 					markers = updateMarkers(data, markers, map);
